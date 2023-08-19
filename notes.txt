@@ -1,0 +1,12 @@
+camera:
+	- dans camera_orbit ne pas alterer azimuth, polar lors de la rotation
+	- precalculer la position dans la fonction
+	- les 'boudings boxes' pour la projection orthographique sont anormales
+	  avec 64, -64, ... et 1 pour le 'top'
+
+render:
+	- dans draw_segment_quality renommer 'step' en 'slope' (coefficient directeur de la droite)
+	- regarder si il n'est pas trop couteux de recalculer la couleur du pixel pour le pixel
+	  d'antialising
+	- commencer le rendu un pixel plus loin pour ne pas avoir a verifier si la position donnee
+	  est dans l'ecran lors du render_draw_pixel
