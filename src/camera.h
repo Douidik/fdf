@@ -26,6 +26,7 @@ typedef struct s_fdf_camera
 	float polar;
 	float azimuth;
 	float radius;
+	t_vec3f pos;
 	t_vec3f rot;
 	t_vec3f pan;
 	t_vec3f center;

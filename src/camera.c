@@ -21,7 +21,7 @@ t_fdf_camera fdf_camera_new(t_fdf_map *map, t_fdf_window *wnd)
 	cam.plane.ratio = ((float)wnd->w) / ((float)wnd->h);
 	cam.plane.near = 0.1;
 	cam.plane.far = 100.0;
-	cam.plane.top = 1;
+	cam.plane.top = +64;
 	cam.plane.bottom = -64;
 	cam.plane.right = +64;
 	cam.plane.left = -64;
@@ -37,11 +37,6 @@ t_fdf_camera fdf_camera_new(t_fdf_map *map, t_fdf_window *wnd)
 
 t_mat4f *fdf_camera_mvp(t_fdf_camera *cam)
 {
-	t_vec3f pos;
-
-	pos.x = cam->center.x + cam->radius * cosf(cam->polar) * cosf(cam->azimuth);
-	pos.y = cam->center.y + cam->radius * sinf(cam->polar);
-	pos.z = cam->center.z + cam->radius * cosf(cam->polar) * sinf(cam->azimuth);
 	if (cam->obsolete)
 	{
 		cam->mvp = mat4_identity();
@@ -52,7 +47,7 @@ t_mat4f *fdf_camera_mvp(t_fdf_camera *cam)
 		if (cam->proj == FDF_CAM_ORTHOGRAPHIC || cam->proj == FDF_CAM_ISOMETRIC)
 			cam->p = mat4_orthographic(cam->plane);
 		cam->v = mat4_rotate(cam->v, cam->rot);
-		cam->v = mat4_translate(cam->v, pos);
+		cam->v = mat4_translate(cam->v, cam->pos);
 		cam->v = mat4_translate(cam->v, cam->pan);
 		cam->mvp = mat4_mul_mat4(cam->mvp, cam->p);
 		cam->mvp = mat4_mul_mat4(cam->mvp, cam->v);
@@ -70,6 +65,9 @@ void fdf_camera_orbit(t_fdf_camera *cam, float polar, float azimuth)
 		cam->azimuth = azimuth;
 		cam->rot.x = cam->polar;
 		cam->rot.y = -M_PI_2 + cam->azimuth;
+		cam->pos.x = cam->center.x + cam->radius * cosf(cam->polar) * cosf(cam->azimuth);
+		cam->pos.y = cam->center.y + cam->radius * sinf(cam->polar);
+		cam->pos.z = cam->center.z + cam->radius * cosf(cam->polar) * sinf(cam->azimuth);
 		cam->obsolete = 1;
 	}
 }

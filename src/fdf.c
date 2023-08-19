@@ -25,7 +25,7 @@ t_fdf *fdf_new(t_fdf_map *map, const char *fp)
 	fdf->mlx = mlx_init();
 	if (!fdf->mlx)
 		return (ft_printf("cannot initialize mlx\n"), fdf_free(fdf));
-	fdf->wnd = fdf_window_new(fdf->mlx, 1000, 800, "fdf");
+	fdf->wnd = fdf_window_new(fdf->mlx, 1000, 800, fdf->filename);
 	if (!fdf->wnd)
 		return (ft_printf("cannot open window\n"), fdf_free(fdf));
 	fdf->nav = fdf_nav_none();
