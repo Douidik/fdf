@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   interface.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:05:16 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:06:08 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "interface.h"
 #include "fdf.h"
 #include "render/renderer.h"
@@ -7,9 +19,9 @@
 #include <mlx.h>
 #include <stdlib.h>
 
-t_fdf_interface *fdf_interface_new(struct s_fdf *fdf)
+t_fdf_interface	*fdf_interface_new(struct s_fdf *fdf)
 {
-	t_fdf_interface *interface;
+	t_fdf_interface	*interface;
 
 	interface = ft_calloc(1, sizeof(t_fdf_interface));
 	if (!interface)
@@ -18,7 +30,7 @@ t_fdf_interface *fdf_interface_new(struct s_fdf *fdf)
 	return (interface);
 }
 
-t_fdf_interface *fdf_interface_free(t_fdf_interface *interface)
+t_fdf_interface	*fdf_interface_free(t_fdf_interface *interface)
 {
 	if (interface != NULL)
 	{
@@ -27,19 +39,20 @@ t_fdf_interface *fdf_interface_free(t_fdf_interface *interface)
 	return (NULL);
 }
 
-void fdf_interface_draw(t_fdf_interface *interface, const char *s)
+void	fdf_interface_draw(t_fdf_interface *interface, const char *s)
 {
-	t_fdf *fdf;
-	t_fdf_window *wnd;
+	t_fdf			*fdf;
+	t_fdf_window	*wnd;
 
 	fdf = interface->fdf;
 	wnd = interface->fdf->wnd;
-	mlx_string_put(fdf->mlx, wnd->impl, interface->pos.x, interface->pos.y, FDF_PAL_TEXT.v, (char *)s);
+	mlx_string_put(fdf->mlx, wnd->impl, interface->pos.x, interface->pos.y,
+		FDF_PAL_TEXT.v, (char *)s);
 	interface->pos.x += interface->step.x;
 	interface->pos.y += interface->step.y;
 }
 
-void fdf_interface_controls(t_fdf_interface *interface)
+void	fdf_interface_controls(t_fdf_interface *interface)
 {
 	fdf_interface_draw(interface, "> Controls");
 	fdf_interface_draw(interface, "[Q] Orbit");
@@ -55,10 +68,10 @@ void fdf_interface_controls(t_fdf_interface *interface)
 	fdf_interface_draw(interface, "[Mouse scroll] Map height");
 }
 
-void fdf_interface_update(t_fdf_interface *interface, t_fdf *fdf)
+void	fdf_interface_update(t_fdf_interface *interface, t_fdf *fdf)
 {
-	char pal[64];
-	char cam_proj[64];
+	char	pal[64];
+	char	cam_proj[64];
 
 	fdf->interface->pos = (t_vec2){10, 25};
 	fdf->interface->step = (t_vec2){0, 25};
@@ -71,7 +84,8 @@ void fdf_interface_update(t_fdf_interface *interface, t_fdf *fdf)
 	ft_strlcat(pal, "]", sizeof(pal));
 	fdf_memset(cam_proj, 0, sizeof(cam_proj));
 	ft_strlcat(cam_proj, "Camera projection: ", sizeof(cam_proj));
-	ft_strlcat(cam_proj, fdf_camera_projection_name(fdf->cam.proj), sizeof(cam_proj));
+	ft_strlcat(cam_proj, fdf_camera_projection_name(fdf->cam.proj),
+		sizeof(cam_proj));
 	fdf_interface_draw(interface, cam_proj);
 	fdf_interface_draw(interface, pal);
 	if (fdf->render->render_mode == FDF_RENDER_FAST)

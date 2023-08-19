@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:07:51 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:08:07 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "map.h"
 #include "fdf.h"
 #include "util/cmp.h"
@@ -6,7 +18,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-t_fdf_map *fdf_map_init(t_fdf_map *map, int w, int h)
+t_fdf_map	*fdf_map_init(t_fdf_map *map, int w, int h)
 {
 	map->scroll = 6;
 	map->w = w;
@@ -18,7 +30,7 @@ t_fdf_map *fdf_map_init(t_fdf_map *map, int w, int h)
 	return (map);
 }
 
-t_fdf_map *fdf_map_free(t_fdf_map *map)
+t_fdf_map	*fdf_map_free(t_fdf_map *map)
 {
 	if (map != NULL)
 	{
@@ -30,17 +42,17 @@ t_fdf_map *fdf_map_free(t_fdf_map *map)
 	return (NULL);
 }
 
-float fdf_map_factor(t_fdf_map *map)
+float	fdf_map_factor(t_fdf_map *map)
 {
-	return (float)map->scroll / fabsf((float)map->max - map->min) / 3;
+	return ((float)map->scroll / fabsf((float)map->max - map->min) / 3);
 }
 
 #define FDF_SCROLL_UP (5)
 #define FDF_SCROLL_DOWN (4)
 
-int fdf_map_on_mouse(int m, int x, int y, t_fdf *fdf)
+int	fdf_map_on_mouse(int m, int x, int y, t_fdf *fdf)
 {
-	t_fdf_map *map;
+	t_fdf_map	*map;
 
 	(void)x;
 	(void)y;

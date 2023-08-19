@@ -1,18 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   camera_nav.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 19:59:34 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:39:37 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "camera.h"
 #include "nav.h"
 #include "window.h"
 #include <math.h>
 
-#define FDF_ORBIT_SPEED (M_PI * 2)
+#define FDF_ORBIT_SPEED (M_2_PI)
 #define FDF_PAN_SPEED (0.25)
 #define FDF_ZOOM_SPEED (M_PI)
 
-void fdf_camera_nav_orbit(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
+void	fdf_camera_nav_orbit(t_fdf_camera *cam, t_fdf_camera *prev,
+		t_vec2f motion)
 {
-	float move_azimuth;
-	float move_polar;
-	float azimuth;
-	float polar;
+	float	move_azimuth;
+	float	move_polar;
+	float	azimuth;
+	float	polar;
 
 	if (motion.x != 0 || motion.y != 0)
 	{
@@ -27,23 +40,27 @@ void fdf_camera_nav_orbit(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
 	}
 }
 
-void fdf_camera_nav_pan(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
+void	fdf_camera_nav_pan(t_fdf_camera *cam, t_fdf_camera *prev,
+		t_vec2f motion)
 {
-	t_vec3f move;
+	t_vec3f	move;
 
 	if (motion.x != 0 || motion.y != 0)
 	{
-		move.x = cosf(cam->rot.y + M_PI_2) * motion.y + cosf(cam->rot.y) * motion.x;
-		move.z = sinf(cam->rot.y + M_PI_2) * motion.y + sinf(cam->rot.y) * motion.x;
+		move.x = cosf(cam->rot.y + M_PI_2) * motion.y
+			+ cosf(cam->rot.y) * motion.x;
+		move.z = sinf(cam->rot.y + M_PI_2) * motion.y
+			+ sinf(cam->rot.y) * motion.x;
 		cam->pan.x = prev->pan.x + move.x * FDF_PAN_SPEED;
 		cam->pan.z = prev->pan.z + move.z * FDF_PAN_SPEED;
 		cam->obsolete = 1;
 	}
 }
 
-void fdf_camera_nav_zoom(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
+void	fdf_camera_nav_zoom(t_fdf_camera *cam, t_fdf_camera *prev,
+	t_vec2f motion)
 {
-	float amount;
+	float	amount;
 
 	amount = motion.y * FDF_ZOOM_SPEED / cam->wnd->h;
 	if (amount != 0)
@@ -53,7 +70,8 @@ void fdf_camera_nav_zoom(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
 	}
 }
 
-void fdf_camera_nav_fly(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
+void	fdf_camera_nav_fly(t_fdf_camera *cam, t_fdf_camera *prev,
+		t_vec2f motion)
 {
 	if (motion.y != 0)
 	{
@@ -62,13 +80,13 @@ void fdf_camera_nav_fly(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
 	}
 }
 
-void fdf_camera_nav(t_fdf_camera *cam, t_fdf_window *wnd, t_fdf_nav *nav)
+void	fdf_camera_nav(t_fdf_camera *cam, t_fdf_window *wnd, t_fdf_nav *nav)
 {
-	t_vec2 mouse;
-	t_vec2f motion;
+	t_vec2	mouse;
+	t_vec2f	motion;
 
 	if (nav->type == FDF_NAV_NONE)
-		return;
+		return ;
 	mouse = fdf_window_mouse_get(wnd);
 	motion.x = (nav->anchor.x - mouse.x);
 	motion.y = (nav->anchor.y - mouse.y);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fdf_hook.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:02:25 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:02:35 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include "interface.h"
 #include "map.h"
@@ -10,9 +22,9 @@
 #include <math.h>
 #include <mlx.h>
 
-int fdf_on_keypress(int k, t_fdf *fdf)
+int	fdf_on_keypress(int k, t_fdf *fdf)
 {
-	int used;
+	int	used;
 
 	used = 0;
 	if (k == XK_Escape)
@@ -24,9 +36,9 @@ int fdf_on_keypress(int k, t_fdf *fdf)
 	return (used);
 }
 
-int fdf_on_update(t_fdf *fdf)
+int	fdf_on_update(t_fdf *fdf)
 {
-	t_vec2 interface_rect[2];
+	t_vec2	interface_rect[2];
 
 	fdf_camera_nav(&fdf->cam, fdf->wnd, &fdf->nav);
 	if (fdf->cam.obsolete)
@@ -43,7 +55,7 @@ int fdf_on_update(t_fdf *fdf)
 	return (0);
 }
 
-int fdf_on_exposed(t_fdf *fdf)
+int	fdf_on_exposed(t_fdf *fdf)
 {
 	fdf_renderer_free(fdf->render);
 	fdf->render = fdf_renderer_new(fdf->mlx, fdf);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fdf.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:02:42 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:03:39 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include "interface.h"
 #include "map.h"
@@ -11,11 +23,11 @@
 #include <mlx.h>
 #include <stdlib.h>
 
-const char *fdf_filename(const char *fp);
+const char	*fdf_filename(const char *fp);
 
-t_fdf *fdf_new(t_fdf_map *map, const char *fp)
+t_fdf	*fdf_new(t_fdf_map *map, const char *fp)
 {
-	t_fdf *fdf;
+	t_fdf	*fdf;
 
 	fdf = ft_calloc(1, sizeof(t_fdf));
 	if (!fdf)
@@ -40,7 +52,7 @@ t_fdf *fdf_new(t_fdf_map *map, const char *fp)
 	return (fdf);
 }
 
-t_fdf *fdf_free(t_fdf *fdf)
+t_fdf	*fdf_free(t_fdf *fdf)
 {
 	if (fdf != NULL)
 	{
@@ -57,20 +69,21 @@ t_fdf *fdf_free(t_fdf *fdf)
 	return (NULL);
 }
 
-void fdf_run(t_fdf *fdf)
+void	fdf_run(t_fdf *fdf)
 {
 	mlx_do_key_autorepeatoff(fdf->mlx);
 	mlx_hook(fdf->wnd->impl, KeyPress, KeyPressMask, &fdf_on_keypress, fdf);
-	mlx_hook(fdf->wnd->impl, KeyRelease, KeyReleaseMask, &fdf_nav_on_keyrelease, fdf);
-	mlx_hook(fdf->wnd->impl, ButtonPress, ButtonPressMask, &fdf_map_on_mouse, fdf);
-	/* mlx_hook(fdf->wnd->impl, Expose, ExposureMask, &fdf_on_exposed, fdf); */
+	mlx_hook(fdf->wnd->impl, KeyRelease, KeyReleaseMask,
+		&fdf_nav_on_keyrelease, fdf);
+	mlx_hook(fdf->wnd->impl, ButtonPress, ButtonPressMask,
+		&fdf_map_on_mouse, fdf);
 	mlx_loop_hook(fdf->mlx, &fdf_on_update, fdf);
 	mlx_loop(fdf->mlx);
 }
 
-const char *fdf_filename(const char *fp)
+const char	*fdf_filename(const char *fp)
 {
-	const char *filename;
+	const char	*filename;
 
 	filename = fp;
 	while (*fp != 0)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cohen_sutherland.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 21:27:02 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 21:27:39 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cohen_sutherland.h"
 #include "intersect.h"
 
@@ -9,11 +21,11 @@ enum e_cohen_sutherland_region
 	TOP = 1 << 3,
 };
 
-// Clamp v to [1, w], [1, h], it makes the fdf_draw_segment_quality easier to implement
-
-int cohen_sutherland_region(t_vec2 *v, int w, int h)
+// Clamp v to [1, w], [1, h], it makes the
+// fdf_draw_segment_quality easier to implement
+int	cohen_sutherland_region(t_vec2 *v, int w, int h)
 {
-	int region;
+	int	region;
 
 	region = 0;
 	if (v->x < 1)
@@ -27,10 +39,10 @@ int cohen_sutherland_region(t_vec2 *v, int w, int h)
 	return (region);
 }
 
-int cohen_sutherland(t_vec2 *s[2], int w, int h)
+int	cohen_sutherland(t_vec2 *s[2], int w, int h)
 {
-	int region[2];
-	int outside;
+	int	region[2];
+	int	outside;
 
 	region[0] = cohen_sutherland_region(s[0], w, h);
 	region[1] = cohen_sutherland_region(s[1], w, h);

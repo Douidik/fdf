@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_fd.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:40:31 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:40:42 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "read_fd.h"
 #include "mem.h"
 #include <fcntl.h>
@@ -7,9 +19,9 @@
 #define FDF_RDBUF_INIT 32
 #define FDF_RDBUF_FACTOR 2
 
-char *fdf_read_push(char *str, ssize_t len, ssize_t cap)
+char	*fdf_read_push(char *str, ssize_t len, ssize_t cap)
 {
-	char *new;
+	char	*new;
 
 	new = malloc(cap + 1);
 	if (new != NULL)
@@ -18,12 +30,12 @@ char *fdf_read_push(char *str, ssize_t len, ssize_t cap)
 	return (new);
 }
 
-char *fdf_read_fd(int fd)
+char	*fdf_read_fd(int fd)
 {
-	ssize_t rdsize;
-	size_t len;
-	size_t cap;
-	char *str;
+	ssize_t	rdsize;
+	size_t	len;
+	size_t	cap;
+	char	*str;
 
 	len = 0;
 	cap = FDF_RDBUF_INIT;

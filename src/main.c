@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:07:21 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:07:40 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include "map.h"
 #include "parse/parser.h"
@@ -5,12 +17,12 @@
 #include <ft_printf.h>
 #include <unistd.h>
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-	t_fdf *fdf;
-	t_fdf_parser *parser;
-	t_fdf_map map;
-	int fd;
+	t_fdf			*fdf;
+	t_fdf_parser	*parser;
+	t_fdf_map		map;
+	int				fd;
 
 	if (argc < 2)
 		return (ft_printf("no map specified in program arguments\n"), 1);
@@ -22,7 +34,8 @@ int main(int argc, char *argv[])
 	if (!parser)
 		return (ft_printf("cannot read file from '%s'\n", argv[1]), 1);
 	if (!fdf_parse_map(parser, &map))
-		return (fdf_parser_free(parser), ft_printf("cannot parse file from '%s'\n", argv[1]), 1);
+		return (fdf_parser_free(parser),
+			ft_printf("cannot parse file from '%s'\n", argv[1]), 1);
 	fdf = fdf_new(&map, argv[1]);
 	fdf_parser_free(parser);
 	if (!fdf)

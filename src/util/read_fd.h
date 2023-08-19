@@ -1,6 +1,18 @@
-#ifndef FDF_READ_FD_H
-#define FDF_READ_FD_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_fd.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:40:03 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:40:27 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-char *fdf_read_fd(int fd);
+#ifndef READ_FD_H
+# define READ_FD_H
+
+char	*fdf_read_fd(int fd);
 
 #endif

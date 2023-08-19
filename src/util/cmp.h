@@ -1,10 +1,22 @@
-#ifndef FDF_CMP_H
-#define FDF_CMP_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmp.h                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:42:27 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:42:51 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <stddef.h>
+#ifndef CMP_H
+# define CMP_H
 
-int fdf_array_min(int array[], size_t len);
-int fdf_array_max(int array[], size_t len);
-int fdf_abs(int x);
+# include <stddef.h>
+
+int	fdf_array_min(int array[], size_t len);
+int	fdf_array_max(int array[], size_t len);
+int	fdf_abs(int x);
 
 #endif

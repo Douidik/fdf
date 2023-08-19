@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_map.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 21:17:31 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 21:19:40 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "camera.h"
 #include "fdf.h"
 #include "map.h"
@@ -8,24 +20,24 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-void fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map, t_mat4f *mvp, t_vec2 coords);
-void fdf_draw_vertex(t_fdf_renderer *render, t_fdf_vertex *a, t_fdf_vertex *b);
+void	fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map,
+			t_mat4f *mvp, t_vec2 coords);
+void	fdf_draw_vertex(t_fdf_renderer *render,
+			t_fdf_vertex *a, t_fdf_vertex *b);
 
-void fdf_draw_map(t_fdf_renderer *render, t_fdf_camera *cam, t_fdf_map *map)
+void	fdf_draw_map(t_fdf_renderer *render, t_fdf_camera *cam, t_fdf_map *map)
 {
-	int x;
-	int y;
-	int i;
-	t_mat4f *mvp;
-	t_fdf_vertex *v;
+	int				x;
+	int				y;
+	int				i;
+	t_fdf_vertex	*v;
 
-	mvp = fdf_camera_mvp(cam);
 	y = 0;
 	while (y < map->h)
 	{
 		x = 0;
 		while (x < map->w)
-			fdf_make_vertex(render, map, mvp, (t_vec2){x++, y});
+			fdf_make_vertex(render, map, fdf_camera_mvp(cam), (t_vec2){x++, y});
 		y++;
 	}
 	i = 0;
@@ -33,17 +45,19 @@ void fdf_draw_map(t_fdf_renderer *render, t_fdf_camera *cam, t_fdf_map *map)
 	{
 		v = &render->vs[i++];
 		if (v->coords.x + 1 < map->w)
-			fdf_draw_vertex(render, v, &render->vs[v->coords.y * map->w + (v->coords.x + 1)]);
+			fdf_draw_vertex(render, v,
+				&render->vs[v->coords.y * map->w + (v->coords.x + 1)]);
 		if (v->coords.y + 1 < map->h)
-			fdf_draw_vertex(render, v, &render->vs[(v->coords.y + 1) * map->w + v->coords.x]);
+			fdf_draw_vertex(render, v,
+				&render->vs[(v->coords.y + 1) * map->w + v->coords.x]);
 	}
 }
 
-t_fdf_color fdf_vertex_color(t_fdf_renderer *render, t_fdf_map *map, int i)
+t_fdf_color	fdf_vertex_color(t_fdf_renderer *render, t_fdf_map *map, int i)
 {
-	t_fdf_palette *pal;
-	int t;
-	int u;
+	t_fdf_palette	*pal;
+	int				t;
+	int				u;
 
 	pal = &render->fdf->pals[render->fdf->pal];
 	if (!pal->enabled)
@@ -60,11 +74,12 @@ t_fdf_color fdf_vertex_color(t_fdf_renderer *render, t_fdf_map *map, int i)
 	}
 }
 
-void fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map, t_mat4f *mvp, t_vec2 coords)
+void	fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map,
+	t_mat4f *mvp, t_vec2 coords)
 {
-	size_t i;
-	t_fdf_vertex *v;
-	t_vec4f p;
+	size_t			i;
+	t_fdf_vertex	*v;
+	t_vec4f			p;
 
 	i = coords.y * map->w + coords.x;
 	v = &render->vs[i];
@@ -78,13 +93,14 @@ void fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map, t_mat4f *mvp, t_vec
 	v->z = p.z;
 }
 
-void fdf_draw_vertex(t_fdf_renderer *render, t_fdf_vertex *a, t_fdf_vertex *b)
+void	fdf_draw_vertex(t_fdf_renderer *render,
+	t_fdf_vertex *a, t_fdf_vertex *b)
 {
-	t_vec2 s[2];
-	t_fdf_map_shader_data data;
+	t_vec2					s[2];
+	t_fdf_map_shader_data	data;
 
 	if (!a || !b || a->hidden || b->hidden)
-		return;
+		return ;
 	s[0] = a->pos;
 	s[1] = b->pos;
 	data.a = a;

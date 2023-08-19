@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmp.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:42:56 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:43:10 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cmp.h"
 
-int fdf_array_min(int array[], size_t len)
+int	fdf_array_min(int array[], size_t len)
 {
-	size_t i;
-	int min;
+	size_t	i;
+	int		min;
 
 	if (!array || !len)
 		return (0);
@@ -18,10 +30,10 @@ int fdf_array_min(int array[], size_t len)
 	return (min);
 }
 
-int fdf_array_max(int array[], size_t len)
+int	fdf_array_max(int array[], size_t len)
 {
-	size_t i;
-	int max;
+	size_t	i;
+	int		max;
 
 	if (!array || !len)
 		return (0);
@@ -36,7 +48,7 @@ int fdf_array_max(int array[], size_t len)
 	return (max);
 }
 
-int fdf_abs(int x)
+int	fdf_abs(int x)
 {
 	if (x < 0)
 		return (-x);

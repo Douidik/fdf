@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   scan.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 20:34:52 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 20:35:29 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "scan.h"
 #include <libft.h>
 #include <limits.h>
 
-t_fdf_token_kind fdf_kind(char c)
+t_fdf_token_kind	fdf_kind(char c)
 {
 	if (c == ' ')
 		return (FDF_SPACE);
@@ -16,7 +28,7 @@ t_fdf_token_kind fdf_kind(char c)
 		return (FDF_EOF);
 }
 
-t_fdf_token *fdf_scan(const char *src, t_fdf_token *tok)
+t_fdf_token	*fdf_scan(const char *src, t_fdf_token *tok)
 {
 	if (!tok->expr)
 		tok->expr = src;
@@ -37,9 +49,9 @@ t_fdf_token *fdf_scan(const char *src, t_fdf_token *tok)
 	return (tok);
 }
 
-size_t fdf_atoi_prefix(t_fdf_token tok, int *sign, const char **base)
+size_t	fdf_atoi_prefix(t_fdf_token tok, int *sign, const char **base)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	*sign = 1;
@@ -59,13 +71,13 @@ size_t fdf_atoi_prefix(t_fdf_token tok, int *sign, const char **base)
 	return (i);
 }
 
-int fdf_atoi(t_fdf_token tok)
+int	fdf_atoi(t_fdf_token tok)
 {
-	size_t i;
-	int sign;
-	int pow;
-	int x;
-	const char *base;
+	size_t		i;
+	int			sign;
+	int			pow;
+	int			x;
+	const char	*base;
 
 	i = fdf_atoi_prefix(tok, &sign, &base);
 	x = 0;
@@ -77,5 +89,5 @@ int fdf_atoi(t_fdf_token tok)
 		pow *= 10;
 		i++;
 	}
-	return x;
+	return (x);
 }

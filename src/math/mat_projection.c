@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mat_projection.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/19 21:23:44 by jsuppan           #+#    #+#             */
+/*   Updated: 2023/08/19 21:24:04 by jsuppan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mat.h"
 #include <math.h>
 
@@ -10,10 +22,10 @@
 // |           ( 1 / (tan(fov)/2) ) * y                     |
 // [ ( far / (far-near) ) * z - ( far / (far-near) ) * near ]
 
-t_mat4f mat4_perspective(t_projection_plane p)
+t_mat4f	mat4_perspective(t_projection_plane p)
 {
-	t_mat4f mat;
-	float f;
+	t_mat4f	mat;
+	float	f;
 
 	f = FDF_FOV * (1 / p.zoom);
 	mat = (t_mat4f){0};
@@ -25,11 +37,11 @@ t_mat4f mat4_perspective(t_projection_plane p)
 	return (mat);
 }
 
-t_mat4f mat4_orthographic(t_projection_plane p)
+t_mat4f	mat4_orthographic(t_projection_plane p)
 {
-	t_mat4f mat;
-	float w;
-	float h;
+	t_mat4f	mat;
+	float	w;
+	float	h;
 
 	p.left *= p.zoom;
 	p.right *= p.zoom;
@@ -47,21 +59,3 @@ t_mat4f mat4_orthographic(t_projection_plane p)
 	mat.m[3][3] = 1;
 	return (mat);
 }
-
-/* #define FDF_SQRT2 (1.41421356237) */
-/* #define FDF_SQRT6 (2.44948974278) */
-/* #define FDF_SQRT_2_3 (0.816496580928) */
-
-/* t_mat4f mat4_isometric(t_projection_plane p) */
-/* { */
-/* 	t_mat4f mat; */
-	
-/* 	(void)p; */
-/* 	mat = (t_mat4f){0}; */
-/* 	mat.m[0][0] = FDF_SQRT2 / 2; */
-/* 	mat.m[0][1] = -FDF_SQRT2 / 2; */
-/* 	mat.m[1][0] = -1 / FDF_SQRT6; */
-/* 	mat.m[1][1] = -1 / FDF_SQRT6; */
-/* 	mat.m[1][2] = FDF_SQRT_2_3; */
-/* 	return (mat); */
-/* } */
