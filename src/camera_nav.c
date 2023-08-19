@@ -2,41 +2,64 @@
 #include "nav.h"
 #include "window.h"
 #include <math.h>
-#include <float.h>
 
-#define FDF_MOUSE_SENSITIVITY (0.3f)
+#define FDF_ORBIT_SPEED (M_PI * 2)
+#define FDF_PAN_SPEED (0.25)
+#define FDF_ZOOM_SPEED (M_PI)
 
-void fdf_camera_move(t_fdf_camera *cam, t_fdf_nav *nav, t_vec2f motion)
+void fdf_camera_nav_orbit(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
 {
-	if (motion.x == 0 && motion.y == 0)
-		return;
-	cam->pos.x = nav->prev.x + motion.x;
-	cam->pos.y = nav->prev.y;
-	cam->pos.z = nav->prev.z + motion.y;
-	cam->obsolete = 1;
+	float move_azimuth;
+	float move_polar;
+	float azimuth;
+	float polar;
+
+	if (motion.x != 0 || motion.y != 0)
+	{
+		move_azimuth = motion.x * FDF_ORBIT_SPEED / cam->wnd->w;
+		move_polar = motion.y * FDF_ORBIT_SPEED / cam->wnd->h;
+		azimuth = prev->azimuth - move_azimuth;
+		polar = prev->polar + move_polar;
+		azimuth = fmodf(fmodf(azimuth, +M_PI * 2), -M_PI * 2);
+		polar = fminf(fmaxf(polar, -M_PI / 2), +M_PI / 2);
+		fdf_camera_orbit(cam, polar, azimuth);
+		cam->obsolete = 1;
+	}
 }
 
-void fdf_camera_look(t_fdf_camera *cam, t_fdf_nav *nav, t_vec2f motion)
+void fdf_camera_nav_pan(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
 {
-	if (motion.x == 0 && motion.y == 0)
-		return;
-	cam->rot.x = nav->prev.x + motion.y * M_PI / 180;
-	cam->rot.y = nav->prev.y + motion.x * M_PI / 180;
-	cam->rot.z = nav->prev.z;
-	cam->obsolete = 1;
+	t_vec3f move;
+
+	if (motion.x != 0 || motion.y != 0)
+	{
+		move.x = cosf(cam->rot.y + M_PI_2) * motion.y + cosf(cam->rot.y) * motion.x;
+		move.z = sinf(cam->rot.y + M_PI_2) * motion.y + sinf(cam->rot.y) * motion.x;
+		cam->pan.x = prev->pan.x + move.x * FDF_PAN_SPEED;
+		cam->pan.z = prev->pan.z + move.z * FDF_PAN_SPEED;
+		cam->obsolete = 1;
+	}
 }
 
-void fdf_camera_zoom(t_fdf_camera *cam, t_fdf_nav *nav, t_vec2f motion)
+void fdf_camera_nav_zoom(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
 {
 	float amount;
 
-	amount = motion.x * motion.x + motion.y * motion.y;
-	if (amount == 0)
-		return;
-	cam->scale.x = fmaxf(nav->prev.x + amount, 0.0);
-	cam->scale.y = fmaxf(nav->prev.y + amount, 0.0);
-	cam->scale.z = fmaxf(nav->prev.z + amount, 0.0);
-	cam->obsolete = 1;
+	amount = motion.y * FDF_ZOOM_SPEED / cam->wnd->h;
+	if (amount != 0)
+	{
+		cam->plane.zoom = fmax(prev->plane.zoom + amount, 0);
+		cam->obsolete = 1;
+	}
+}
+
+void fdf_camera_nav_fly(t_fdf_camera *cam, t_fdf_camera *prev, t_vec2f motion)
+{
+	if (motion.y != 0)
+	{
+		cam->pan.y = prev->pan.y + motion.y * FDF_PAN_SPEED;
+		cam->obsolete = 1;
+	}
 }
 
 void fdf_camera_nav(t_fdf_camera *cam, t_fdf_window *wnd, t_fdf_nav *nav)
@@ -44,15 +67,17 @@ void fdf_camera_nav(t_fdf_camera *cam, t_fdf_window *wnd, t_fdf_nav *nav)
 	t_vec2 mouse;
 	t_vec2f motion;
 
-	if (nav->type == FDF_NAV_IDLE)
+	if (nav->type == FDF_NAV_NONE)
 		return;
 	mouse = fdf_window_mouse_get(wnd);
-	motion.x = (nav->anchor.x - mouse.x) * FDF_MOUSE_SENSITIVITY;
-	motion.y = (nav->anchor.y - mouse.y) * FDF_MOUSE_SENSITIVITY;
-	if (nav->type == FDF_NAV_MOVE)
-		fdf_camera_move(cam, nav, motion);
-	else if (nav->type == FDF_NAV_LOOK)
-		fdf_camera_look(cam, nav, motion);
+	motion.x = (nav->anchor.x - mouse.x);
+	motion.y = (nav->anchor.y - mouse.y);
+	if (nav->type == FDF_NAV_ORBIT)
+		fdf_camera_nav_orbit(cam, &nav->prev, motion);
+	else if (nav->type == FDF_NAV_PAN)
+		fdf_camera_nav_pan(cam, &nav->prev, motion);
 	else if (nav->type == FDF_NAV_ZOOM)
-		fdf_camera_zoom(cam, nav, motion);
+		fdf_camera_nav_zoom(cam, &nav->prev, motion);
+	else if (nav->type == FDF_NAV_FLY)
+		fdf_camera_nav_fly(cam, &nav->prev, motion);
 }

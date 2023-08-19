@@ -1,23 +1,14 @@
 #include "camera.h"
+#include "fdf.h"
 #include "map.h"
 #include "map_shader.h"
 #include "math/lerp.h"
 #include "renderer.h"
 #include "window.h"
 #include <stddef.h>
+#include <stdlib.h>
 
-#define FDF_COLOR_BEGIN \
-	(t_fdf_color)       \
-	{                   \
-		.v = 0xff00ffff \
-	}
-#define FDF_COLOR_END   \
-	(t_fdf_color)       \
-	{                   \
-		.v = 0xffff00ff \
-	}
-
-void fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map, t_mat4 *mvp, t_vec2 coords);
+void fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map, t_mat4f *mvp, t_vec2 coords);
 void fdf_draw_vertex(t_fdf_renderer *render, t_fdf_vertex *a, t_fdf_vertex *b);
 
 void fdf_draw_map(t_fdf_renderer *render, t_fdf_camera *cam, t_fdf_map *map)
@@ -25,7 +16,7 @@ void fdf_draw_map(t_fdf_renderer *render, t_fdf_camera *cam, t_fdf_map *map)
 	int x;
 	int y;
 	int i;
-	t_mat4 *mvp;
+	t_mat4f *mvp;
 	t_fdf_vertex *v;
 
 	mvp = fdf_camera_mvp(cam);
@@ -48,19 +39,38 @@ void fdf_draw_map(t_fdf_renderer *render, t_fdf_camera *cam, t_fdf_map *map)
 	}
 }
 
-void fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map, t_mat4 *mvp, t_vec2 coords)
+t_fdf_color fdf_vertex_color(t_fdf_renderer *render, t_fdf_map *map, int i)
+{
+	t_fdf_palette *pal;
+	int t;
+	int u;
+
+	pal = &render->fdf->pals[render->fdf->pal];
+	if (!pal->enabled)
+	{
+		if (!map->colors[i].v)
+			return (FDF_WHITE);
+		return (map->colors[i]);
+	}
+	else
+	{
+		t = map->min + map->verts[i];
+		u = map->min + map->max;
+		return (fdf_lerp_rgbs((float)t / u, pal->colors, pal->len));
+	}
+}
+
+void fdf_make_vertex(t_fdf_renderer *render, t_fdf_map *map, t_mat4f *mvp, t_vec2 coords)
 {
 	size_t i;
 	t_fdf_vertex *v;
 	t_vec4f p;
-	int h;
 
 	i = coords.y * map->w + coords.x;
 	v = &render->vs[i];
-	h = map->data[i];
-	v->color = fdf_lerp_rgb(h + map->min, map->amplitude + map->min, FDF_COLOR_BEGIN, FDF_COLOR_END);
+	v->color = fdf_vertex_color(render, map, i);
 	v->coords = coords;
-	p = (t_vec4f){coords.x, h, coords.y, 1.0};
+	p = (t_vec4f){coords.x, map->verts[i] * fdf_map_factor(map), coords.y, 1.0};
 	p = mat4_mul_vec4(*mvp, p);
 	v->hidden = p.w <= -p.z;
 	v->pos.x = (1 - p.x / p.w) * 0.5 * render->wnd->w;

@@ -3,6 +3,7 @@
 #include "math/vec.h"
 #include "scan.h"
 #include "util/cmp.h"
+#include "util/mem.h"
 #include "util/read_fd.h"
 #include <fcntl.h>
 #include <libft.h>
@@ -35,53 +36,56 @@ t_fdf_parser *fdf_parser_free(t_fdf_parser *parser)
 	return (NULL);
 }
 
-void fdf_parse_size(t_fdf_parser *parser, t_fdf_map *map)
+t_fdf_map *fdf_parse_init(t_fdf_parser *parser, t_fdf_map *map)
 {
 	t_fdf_token tok;
+	int w;
+	int h;
 
-	map->w = 0;
-	map->h = 0;
+	w = 0;
+	h = 0;
 	tok = (t_fdf_token){0};
 	while (fdf_scan(parser->src, &tok)->kind & ~(FDF_EOF | FDF_NEWL))
 	{
-		if (tok.kind & FDF_INT)
-			map->w++;
+		if (tok.kind & FDF_VERTEX)
+			w++;
 	}
 	tok = (t_fdf_token){0};
 	while (fdf_scan(parser->src, &tok)->kind & ~(FDF_EOF))
 	{
-		while (fdf_scan(parser->src, &tok)->kind & (FDF_INT | FDF_SPACE))
+		while (fdf_scan(parser->src, &tok)->kind & (FDF_VERTEX | FDF_SPACE | FDF_COLOR))
 			;
-		map->h++;
+		h++;
 	}
+	return (fdf_map_init(map, w, h));
 }
 
 t_fdf_map *fdf_parse_map(t_fdf_parser *parser, t_fdf_map *map)
 {
 	t_fdf_token tok;
 	t_vec2 pos;
+	t_fdf_color *color;
 
-	fdf_parse_size(parser, map);
-	map->data = ft_calloc(map->w * map->h, sizeof(int));
-	if (!map->data)
+	if (!fdf_parse_init(parser, map))
 		return (NULL);
 	tok = (t_fdf_token){0};
 	pos = (t_vec2){0};
 	while (fdf_scan(parser->src, &tok)->kind & ~FDF_EOF)
 	{
 		if (tok.kind & FDF_NEWL)
+			pos = (t_vec2){0, pos.y + 1};
+		else if (tok.kind & FDF_VERTEX)
 		{
-			pos.x = 0;
-			pos.y++;
-		}
-		else if (tok.kind & FDF_INT)
-		{
-			map->data[pos.y * map->w + pos.x] = fdf_atoi(tok);
+			if (pos.x >= map->w || pos.y >= map->h)
+				return (fdf_map_free(map));
+			color = &map->colors[pos.y * map->w + pos.x];
+			map->verts[pos.y * map->w + pos.x] = fdf_atoi(tok);
 			pos.x++;
 		}
+		else if (tok.kind & FDF_COLOR)
+			color->v = fdf_atoi(tok);
 	}
-	map->min = fdf_array_min(map->data, map->w * map->h);
-	map->max = fdf_array_max(map->data, map->w * map->h);
-	map->amplitude = fdf_abs(map->max - map->min) + 1;
+	map->min = fdf_array_min(map->verts, map->w * map->h);
+	map->max = fdf_array_max(map->verts, map->w * map->h);
 	return (map);
 }

@@ -1,9 +1,9 @@
 #include "mat.h"
 #include <math.h>
 
-t_mat4 mat4_rotation_x(float x)
+t_mat4f mat4_rotation_x(float x)
 {
-    t_mat4 mat;
+    t_mat4f mat;
     float sin;
     float cos;
 
@@ -17,9 +17,9 @@ t_mat4 mat4_rotation_x(float x)
     return (mat);
 }
 
-t_mat4 mat4_rotation_y(float y)
+t_mat4f mat4_rotation_y(float y)
 {
-    t_mat4 mat;
+    t_mat4f mat;
     float sin;
     float cos;
 

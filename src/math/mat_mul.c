@@ -1,13 +1,13 @@
 #include "mat.h"
 
-t_mat4 mat4_mul_mat4(t_mat4 a, t_mat4 b)
+t_mat4f mat4_mul_mat4(t_mat4f a, t_mat4f b)
 {
-    t_mat4 m;
+    t_mat4f m;
     int i;
     int j;
     int k;
 
-    m = (t_mat4){0};
+    m = (t_mat4f){0};
     i = 0;
     while (i < 4)
     {
@@ -27,7 +27,7 @@ t_mat4 mat4_mul_mat4(t_mat4 a, t_mat4 b)
     return (m);
 }
 
-t_mat4 mat4_mul_scalar(t_mat4 mat, float s)
+t_mat4f mat4_mul_scalar(t_mat4f mat, float s)
 {
     int i;
     int j;
@@ -46,7 +46,7 @@ t_mat4 mat4_mul_scalar(t_mat4 mat, float s)
     return (mat);
 }
 
-t_vec4f mat4_mul_vec4(t_mat4 mat, t_vec4f vec)
+t_vec4f mat4_mul_vec4(t_mat4f mat, t_vec4f vec)
 {
     t_vec4f mul;
 

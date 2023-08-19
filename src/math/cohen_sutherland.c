@@ -29,7 +29,6 @@ int cohen_sutherland(t_vec2 *s[2], int w, int h)
 {
 	int region[2];
 	int outside;
-	t_vec2 *v;
 
 	region[0] = cohen_sutherland_region(s[0], w, h);
 	region[1] = cohen_sutherland_region(s[1], w, h);

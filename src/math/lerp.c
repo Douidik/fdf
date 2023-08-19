@@ -1,34 +1,33 @@
 #include "lerp.h"
 #include "render/color.h"
 
-int fdf_lerp(int t, int u, int a, int b)
+int fdf_lerp(float t, int a, int b)
 {
-	return (a + ((float)t / u) * (b - a));
+	return (a + t * (b - a));
 }
 
-t_fdf_color fdf_lerp_rgb(int t, int u, t_fdf_color a, t_fdf_color b)
+t_fdf_color fdf_lerp_rgb(float t, t_fdf_color a, t_fdf_color b)
 {
-	const float time = (float)t / u;
 	t_fdf_color lerp;
 
-	// TODO! this may not work, (b < a) may underflow
-	lerp.r = a.r + time * (b.r - a.r);
-	lerp.g = a.g + time * (b.g - a.g);
-	lerp.b = a.b + time * (b.b - a.b);
+	lerp.r = a.r + t * (b.r - a.r);
+	lerp.g = a.g + t * (b.g - a.g);
+	lerp.b = a.b + t * (b.b - a.b);
 	lerp.a = 255;
 	return (lerp);
 }
 
-t_fdf_color fdf_lerp_rgb_gradient(int t, int u, t_fdf_color s[], size_t len)
+t_fdf_color fdf_lerp_rgbs(float t, t_fdf_color p[], size_t len)
 {
-	const float time = (float)t / u;
-	t_fdf_color lerp;
-	size_t i = 1;
+	float point_time;
+	float point_len;
+	size_t point_n;
 
-	if (!len)
-		return (t_fdf_color){.v = 0};
-	lerp = s[0];
-	while (len--)
-	{
-	}
+	point_len = 1.0f / (len - 1);
+	point_n = t / point_len;
+	point_time = (t - point_n * point_len) / point_len;
+	if (point_n < len - 1)
+		return (fdf_lerp_rgb(point_time, p[point_n], p[point_n + 1]));
+	else
+		return p[len - 1];
 }

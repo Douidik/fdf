@@ -1,57 +1,58 @@
 #include "map.h"
+#include "fdf.h"
+#include "util/cmp.h"
 #include <ft_printf.h>
+#include <libft.h>
+#include <math.h>
 #include <stdlib.h>
+
+t_fdf_map *fdf_map_init(t_fdf_map *map, int w, int h)
+{
+	map->scroll = 6;
+	map->w = w;
+	map->h = h;
+	map->verts = ft_calloc(map->w * map->h, sizeof(int));
+	map->colors = ft_calloc(map->w * map->h, sizeof(int));
+	if (!map->verts || !map->colors)
+		return (fdf_map_free(map));
+	return (map);
+}
 
 t_fdf_map *fdf_map_free(t_fdf_map *map)
 {
-	if (map != NULL && map->data != NULL)
-		free(map->data);
+	if (map != NULL)
+	{
+		if (map->verts != NULL)
+			free(map->verts);
+		if (map->colors != NULL)
+			free(map->colors);
+	}
 	return (NULL);
 }
 
-int fdf_map_prec(t_fdf_map *map)
+float fdf_map_factor(t_fdf_map *map)
 {
-	int prec;
-	int xs[4];
-
-	prec = 1;
-	xs[0] = map->min;
-	xs[1] = map->max;
-	xs[2] = map->w;
-	xs[3] = map->h;
-	while (xs[0] || xs[1] || xs[2] || xs[3])
-	{
-		prec++;
-		xs[0] /= 10;
-		xs[1] /= 10;
-		xs[2] /= 10;
-		xs[3] /= 10;
-	}
-	return (prec);
+	return (float)map->scroll / fabsf((float)map->max - map->min) / 3;
 }
 
-void fdf_map_dump(t_fdf_map *map)
-{
-	int x;
-	int y;
-	int prec;
+#define FDF_SCROLL_UP (5)
+#define FDF_SCROLL_DOWN (4)
 
-	x = 0;
-	y = 0;
-	prec = fdf_map_prec(map);
-	ft_printf("%*s", prec, ":");
-	while (x < map->w)
-		ft_printf("%*d", prec, x++);
-	while (y < map->h)
+int fdf_map_on_mouse(int m, int x, int y, t_fdf *fdf)
+{
+	t_fdf_map *map;
+
+	(void)x;
+	(void)y;
+	map = fdf->map;
+	if (m == FDF_SCROLL_UP || m == FDF_SCROLL_DOWN)
 	{
-		ft_printf("\n%*d", prec, y);
-		x = 0;
-		while (x < map->w)
-		{
-			ft_printf("%*d", prec, map->data[y * map->w + x]);
-			x++;
-		}
-		y++;
+		if (m == FDF_SCROLL_UP)
+			map->scroll--;
+		else
+			map->scroll++;
+		fdf->cam.obsolete = 1;
+		return (1);
 	}
-	ft_printf("\n");
+	return (0);
 }

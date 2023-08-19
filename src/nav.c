@@ -4,43 +4,47 @@
 #include <X11/keysym.h>
 #include <mlx.h>
 
-t_fdf_nav fdf_nav_new(void)
+t_fdf_nav fdf_nav_none(void)
 {
 	return (t_fdf_nav){
-		.type = FDF_NAV_IDLE,
-		.prev = (t_vec3f){0},
+		.type = FDF_NAV_NONE,
 		.anchor = (t_vec2){0},
 		.k = 0,
 	};
 }
 
-void fdf_nav_begin(t_fdf *fdf, int k, t_fdf_nav_input_type type, t_vec3f prev)
+int fdf_nav_begin(t_fdf *fdf, int k, t_fdf_nav_input_type type)
 {
 	fdf->nav = (t_fdf_nav){
-		.prev = prev,
 		.anchor = fdf_window_mouse_get(fdf->wnd),
 		.type = type,
+		.prev = fdf->cam,
 		.k = k,
 	};
 	mlx_mouse_hide(fdf->mlx, fdf->wnd->impl);
 	fdf->cam.obsolete = 1;
+	return (1);
 }
 
-void fdf_nav_on_keypress(t_fdf *fdf, int k)
+int fdf_nav_on_keypress(int k, t_fdf *fdf)
 {
-	if (k == XK_q)
-		fdf_nav_begin(fdf, k, FDF_NAV_MOVE, fdf->cam.pos);
+	if (k == XK_q && fdf->cam.proj != FDF_CAM_ISOMETRIC)
+		return (fdf_nav_begin(fdf, k, FDF_NAV_ORBIT));
 	else if (k == XK_w)
-		fdf_nav_begin(fdf, k, FDF_NAV_LOOK, fdf->cam.rot);
+		return (fdf_nav_begin(fdf, k, FDF_NAV_PAN));
 	else if (k == XK_e)
-		fdf_nav_begin(fdf, k, FDF_NAV_ZOOM, fdf->cam.scale);
+		return (fdf_nav_begin(fdf, k, FDF_NAV_ZOOM));
+	else if (k == XK_s)
+		return (fdf_nav_begin(fdf, k, FDF_NAV_FLY));
+	return (0);
 }
 
-void fdf_nav_on_keyrelease(t_fdf *fdf, int k)
+int fdf_nav_on_keyrelease(int k, t_fdf *fdf)
 {
 	if (k != fdf->nav.k)
-		return;
+		return (0);
 	mlx_mouse_show(fdf->mlx, fdf->wnd->impl);
-	fdf->nav = fdf_nav_new();
+	fdf->nav = fdf_nav_none();
 	fdf->cam.obsolete = 1;
+	return (1);
 }
