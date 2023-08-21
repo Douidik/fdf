@@ -6,14 +6,14 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 21:25:29 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 21:25:45 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 21:25:48 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lerp.h"
 #include "render/color.h"
 
-int	fdf_lerp(float t, int a, int b)
+float	fdf_lerp(float t, float a, float b)
 {
 	return (a + t * (b - a));
 }

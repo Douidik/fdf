@@ -6,7 +6,7 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 20:12:36 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 20:12:55 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 20:00:52 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ t_fdf_window	*fdf_window_free(t_fdf_window *wnd)
 		if (wnd->name != NULL)
 			free(wnd->name);
 		if (wnd->impl != NULL)
+		{
+			mlx_clear_window(wnd->mlx, wnd->impl);
 			mlx_destroy_window(wnd->mlx, wnd->impl);
+		}
 		free(wnd);
 	}
 	return (NULL);
@@ -58,4 +61,9 @@ t_vec2	fdf_window_mouse_set(t_fdf_window *wnd, t_vec2 pos)
 {
 	mlx_mouse_move(wnd->mlx, wnd->impl, pos.x, pos.y);
 	return (pos);
+}
+
+void	fdf_window_clear(t_fdf_window *wnd)
+{
+	mlx_clear_window(wnd->mlx, wnd->impl);
 }

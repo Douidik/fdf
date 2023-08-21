@@ -6,7 +6,7 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 20:57:26 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 21:28:26 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 20:06:24 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,17 @@ t_fdf_renderer	*fdf_renderer_free(t_fdf_renderer *render)
 	return (NULL);
 }
 
-void	fdf_render_clear(t_fdf_renderer *render, t_fdf_color background_color)
-{
-	int	i;
+// This value is used to clear the z-buffer
+// (+inf << 32) | (+inf)
+#define FDF_ZBUF_INF (0x7f8000007f800000)
 
-	i = 0;
-	while (i < render->wnd->w * render->wnd->h)
-		render->zbuffer[i++] = INFINITY;
-	i = 0;
-	while (i < render->wnd->w * render->wnd->h)
-	{
-		*(uint32_t *)(render->stream + i++ *(render->bpp / 8))
-			= background_color.v;
-	}
+// The image is cleared to color (0f, 0f, 0f, 0f)
+void	fdf_render_clear(t_fdf_renderer *render)
+{
+	fdf_memset64(render->zbuffer, FDF_ZBUF_INF,
+		render->wnd->w * render->wnd->h * sizeof(float));
+	fdf_memset(render->stream, 0x1f,
+		render->wnd->w * render->wnd->h * (render->bpp / 8));
 }
 
 void	fdf_render_present(t_fdf_renderer *render)

@@ -6,7 +6,7 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 20:41:24 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 20:42:23 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 19:59:57 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,26 @@ void	*fdf_memset(void *dst, int value, size_t size)
 	{
 		(*(uint8_t *)(dst + i)) = byte;
 		i += sizeof(uint8_t);
+	}
+	return (dst);
+}
+
+void	*fdf_memset64(void *dst, uint64_t value, size_t size)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (i + sizeof(uint64_t) <= size)
+	{
+		(*(uint64_t *)(dst + i)) = value;
+		i += sizeof(uint64_t);
+	}
+	j = 0;
+	while (i + j < size)
+	{
+		(*(uint8_t *)(dst + i + j)) = (value >> (48 - (j * 8))) | 0xff;
+		j++;
 	}
 	return (dst);
 }

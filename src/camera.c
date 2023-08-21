@@ -18,9 +18,9 @@
 #include <math.h>
 
 // The 'isometric projection' is just an orthographic projection
-// but with a certain angle Y: -45, X: -30
+// but with a certain angle Y: -45 (-pi/4), X: -30 (pi/6)
 // these angles are converted in radians
-#define FDF_ISO_AZIMUTH (-2.268928)
+#define FDF_ISO_AZIMUTH (-M_PI_4)
 #define FDF_ISO_POLAR (-0.5235988)
 
 t_fdf_camera	fdf_camera_new(t_fdf_map *map, t_fdf_window *wnd)
@@ -36,8 +36,8 @@ t_fdf_camera	fdf_camera_new(t_fdf_map *map, t_fdf_window *wnd)
 	cam.plane.far = 100.0;
 	cam.plane.top = +64;
 	cam.plane.bottom = -64;
-	cam.plane.right = +64;
-	cam.plane.left = -64;
+	cam.plane.right = +64 * cam.plane.ratio;
+	cam.plane.left = -64 * cam.plane.ratio;
 	fdf_camera_orbit(&cam, 0, M_PI_2);
 	cam.radius = fmaxf((float)map->w, (float)map->h);
 	cam.center.x = -(float)map->w / 2;

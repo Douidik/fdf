@@ -6,7 +6,7 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 20:43:14 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 20:57:22 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 20:06:32 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ typedef struct s_fdf_renderer
 
 t_fdf_renderer	*fdf_renderer_new(void *mlx, struct s_fdf *fdf);
 t_fdf_renderer	*fdf_renderer_free(t_fdf_renderer *render);
-void			fdf_render_clear(t_fdf_renderer *render,
-					t_fdf_color background_color);
+
+void			fdf_render_clear(t_fdf_renderer *render);
 void			fdf_render_present(t_fdf_renderer *render);
 int				fdf_render_on_keypress(int k, struct s_fdf *fdf);
 
@@ -83,6 +83,5 @@ void			fdf_draw_rect(t_fdf_renderer *render,
 void			fdf_draw_map(t_fdf_renderer *render, struct s_fdf_camera *cam,
 					struct s_fdf_map *map);
 void			fdf_draw_nav(t_fdf_renderer *render, struct s_fdf_nav *nav);
-
 
 #endif

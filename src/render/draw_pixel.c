@@ -19,10 +19,10 @@ void	fdf_draw_pixel(t_fdf_renderer *render, t_vec2 pos, t_fdf_color src)
 	t_fdf_color	*dst;
 	float		alpha;
 
-	dst = (t_fdf_color *)
-		(render->stream + pos.y * render->sw + pos.x *(render->bpp / 8));
 	if (src.a == 0)
 		return ;
+	dst = (t_fdf_color *)
+		(render->stream + pos.y * render->sw + pos.x *(render->bpp / 8));
 	if (src.a != 255)
 	{
 		alpha = (float)src.a / 255;

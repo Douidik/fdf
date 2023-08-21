@@ -32,7 +32,6 @@ parse/scan.c \
 util/cmp.c \
 util/mem.c \
 util/read_fd.c \
-render/color.c \
 render/draw_map.c \
 render/draw_nav.c \
 render/draw_pixel.c \

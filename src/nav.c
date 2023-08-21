@@ -33,7 +33,6 @@ int	fdf_nav_begin(t_fdf *fdf, int k, t_fdf_nav_input_type type)
 		.prev = fdf->cam,
 		.k = k,
 	};
-	mlx_mouse_hide(fdf->mlx, fdf->wnd->impl);
 	fdf->cam.obsolete = 1;
 	return (1);
 }

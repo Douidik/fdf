@@ -6,7 +6,7 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 20:02:42 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 20:03:39 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 20:04:54 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ t_fdf	*fdf_free(t_fdf *fdf)
 		if (fdf->wnd != NULL)
 			fdf_window_free(fdf->wnd);
 		if (fdf->mlx != NULL)
+		{
 			mlx_destroy_display(fdf->mlx);
+			free(fdf->mlx);
+		}
 		free(fdf);
 	}
 	return (NULL);
@@ -77,6 +80,7 @@ void	fdf_run(t_fdf *fdf)
 		&fdf_nav_on_keyrelease, fdf);
 	mlx_hook(fdf->wnd->impl, ButtonPress, ButtonPressMask,
 		&fdf_map_on_mouse, fdf);
+	mlx_hook(fdf->wnd->impl, DestroyNotify, 0, fdf_on_close, fdf);
 	mlx_loop_hook(fdf->mlx, &fdf_on_update, fdf);
 	mlx_loop(fdf->mlx);
 }

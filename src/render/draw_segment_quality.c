@@ -6,7 +6,7 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 21:00:05 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 21:16:33 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 20:48:14 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ typedef struct s_fdf_segment
 {
 	int				steep;
 	int				x;
-	int				start_x;
-	int				end_x;
+	int				x0;
+	int				x1;
 	float			y;
 	float			slope;
 	t_vec2f			d;
@@ -46,32 +46,33 @@ float	fdf_dec_part(float f)
 		return (f - ((int)f + 1));
 }
 
-void	fdf_segment_trace(t_fdf_renderer *render, t_fdf_segment *s)
+#define AA_FACTOR (1.3)
+
+void	fdf_segment_trace(t_fdf_renderer *render, t_fdf_segment s)
 {
 	t_fdf_color	color;
 
-	while (s->x <= s->end_x)
+	while (s.x <= s.x1)
 	{
-		s->y += s->slope;
-		s->x++;
-		if (s->steep)
-			color = s->shader((t_vec2){s->y, s->x},
-					s->x - s->start_x, s->d.x, s->data);
+		if (s.steep)
+			color = s.shader((t_vec2){s.y, s.x}, s.x - s.x0, s.d.x, s.data);
 		else
-			color = s->shader((t_vec2){s->x, s->y},
-					s->x - s->start_x, s->d.x, s->data);
-		if (color.a == 0)
-			continue ;
-		color.a = (uint8_t)(fdf_dec_part(s->y) * 255);
-		if (s->steep)
-			fdf_draw_pixel(render, (t_vec2){s->y, s->x}, color);
-		else
-			fdf_draw_pixel(render, (t_vec2){s->x, s->y}, color);
-		color.a = (uint8_t)((1 - fdf_dec_part(s->y)) * 255);
-		if (s->steep)
-			fdf_draw_pixel(render, (t_vec2){s->y - 1, s->x}, color);
-		else
-			fdf_draw_pixel(render, (t_vec2){s->x, s->y - 1}, color);
+			color = s.shader((t_vec2){s.x, s.y}, s.x - s.x0, s.d.x, s.data);
+		if (color.a != 0)
+		{
+			color.a = (fminf(fdf_dec_part(s.y) * AA_FACTOR * 255, 255));
+			if (s.steep && color.a != 0)
+				fdf_draw_pixel(render, (t_vec2){s.y, s.x}, color);
+			else if (color.a != 0)
+				fdf_draw_pixel(render, (t_vec2){s.x, s.y}, color);
+			color.a = (fminf((1 - fdf_dec_part(s.y)) * AA_FACTOR * 255, 255));
+			if (s.steep && color.a != 0)
+				fdf_draw_pixel(render, (t_vec2){s.y - 1, s.x}, color);
+			else if (s.y - 1 > 0 && color.a != 0)
+				fdf_draw_pixel(render, (t_vec2){s.x, s.y - 1}, color);
+		}
+		s.y += s.slope;
+		s.x++;
 	}
 }
 
@@ -100,7 +101,7 @@ void	fdf_draw_segment_quality(t_fdf_renderer *render,
 		s.slope = s.d.y / s.d.x;
 	s.x = p[0].x;
 	s.y = p[0].y;
-	s.start_x = p[0].x;
-	s.end_x = p[1].x;
-	fdf_segment_trace(render, &s);
+	s.x0 = p[0].x;
+	s.x1 = p[1].x;
+	fdf_segment_trace(render, s);
 }

@@ -6,7 +6,7 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 20:03:43 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 20:05:12 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 20:01:03 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ void	fdf_run(t_fdf *fdf);
 int		fdf_on_keypress(int k, t_fdf *fdf);
 int		fdf_on_update(t_fdf *fdf);
 int		fdf_on_exposed(t_fdf *fdf);
+int		fdf_on_close(t_fdf *fdf);
 
 #endif

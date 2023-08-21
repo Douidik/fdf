@@ -22,10 +22,11 @@ t_fdf_color	fdf_map_shader(t_vec2 pos, int n, int len, void *raw_data)
 	float					t;
 
 	data = raw_data;
-	if (pos.x < 0 || pos.x >= data->w || pos.y < 0 || pos.y >= data->h)
-		return ((t_fdf_color){0});
 	i = pos.y * data->w + pos.x;
-	t = (float)n / len;
+	if (len != 0)
+		t = (float)n / len;
+	else
+		t = 1;
 	z = fdf_lerp(t, data->a->z, data->b->z);
 	if (z < data->zbuffer[i])
 	{

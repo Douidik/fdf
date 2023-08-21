@@ -47,7 +47,7 @@ void	fdf_interface_draw(t_fdf_interface *interface, const char *s)
 	fdf = interface->fdf;
 	wnd = interface->fdf->wnd;
 	mlx_string_put(fdf->mlx, wnd->impl, interface->pos.x, interface->pos.y,
-		FDF_PAL_TEXT.v, (char *)s);
+		0xffE1E8F5, (char *)s);
 	interface->pos.x += interface->step.x;
 	interface->pos.y += interface->step.y;
 }

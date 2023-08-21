@@ -63,7 +63,7 @@ t_fdf_color	fdf_vertex_color(t_fdf_renderer *render, t_fdf_map *map, int i)
 	if (!pal->enabled)
 	{
 		if (!map->colors[i].v)
-			return (FDF_WHITE);
+			return ((t_fdf_color){.v = 0xffffffff});
 		return (map->colors[i]);
 	}
 	else

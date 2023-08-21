@@ -6,7 +6,7 @@
 /*   By: jsuppan <jsuppan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 20:12:58 by jsuppan           #+#    #+#             */
-/*   Updated: 2023/08/19 20:34:13 by jsuppan          ###   ########.fr       */
+/*   Updated: 2023/08/21 20:05:07 by jsuppan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ t_fdf_window	*fdf_window_new(void *mlx, int w, int h, const char *filename);
 t_fdf_window	*fdf_window_free(t_fdf_window *wnd);
 t_vec2			fdf_window_mouse_get(t_fdf_window *wnd);
 t_vec2			fdf_window_mouse_set(t_fdf_window *wnd, t_vec2 pos);
+void			fdf_window_clear(t_fdf_window *wnd);
 
 #endif
